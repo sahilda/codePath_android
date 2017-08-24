@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="AddNewItem">Add Item</string>
+    <string name="EnterItem">Enter a new item</string>
+    <string name="EditItem">Edit item below:</string>
+    <string name="Save">Save</string>
+</resources>
