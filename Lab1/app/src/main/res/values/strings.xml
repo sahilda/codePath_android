@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lab1</string>
+    <string name="username">Email or Phone</string>
+    <string name="password">Password</string>
+    <string name="btn_submit">Log In</string>
+    <string name="show_more">Show More</string>
+    <string name="bottom_text">By signing up, I agree to Airbnb\'s Terms and Services, Privacy Policy, Gift Refund Policy, and Host Guarantee Terms.</string>
+    <string name="test_string" ><![CDATA[<font color="%1$s"><b>Test/b></font>]]> String</string>
+</resources>
