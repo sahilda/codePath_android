@@ -8,15 +8,15 @@ Time spent: **X** hours spent in total
 
 The following **required** functionality is completed:
 
-* [ ] User can **scroll through current movies** from the Movie Database API
-* [ ] Layout is optimized with the [ViewHolder](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView#improving-performance-with-the-viewholder-pattern) pattern.
-* [ ] For each movie displayed, user can see the following details:
-  * [ ] Title, Poster Image, Overview (Portrait mode)
-  * [ ] Title, Backdrop Image, Overview (Landscape mode)
+* [x] User can **scroll through current movies** from the Movie Database API
+* [x] Layout is optimized with the [ViewHolder](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView#improving-performance-with-the-viewholder-pattern) pattern.
+* [x] For each movie displayed, user can see the following details:
+  * [x] Title, Poster Image, Overview (Portrait mode)
+  * [x] Title, Backdrop Image, Overview (Landscape mode)
 
 The following **optional** features are implemented:
 
-* [ ] Display a nice default [placeholder graphic](http://guides.codepath.com/android/Displaying-Images-with-the-Picasso-Library#configuring-picasso) for each image during loading.
+* [x] Display a nice default [placeholder graphic](http://guides.codepath.com/android/Displaying-Images-with-the-Picasso-Library#configuring-picasso) for each image during loading.
 
 The following **bonus** features are implemented:
 
@@ -27,7 +27,7 @@ The following **bonus** features are implemented:
     * [ ] More popular movies should start a separate activity that plays the video immediately.
     * [ ] Less popular videos rely on the detail page should show ratings and a YouTube preview.
 * [ ] Apply the popular [Butterknife annotation library](http://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife) to reduce boilerplate code.
-* [ ] Apply rounded corners for the poster or background images using [Picasso transformations](https://guides.codepath.com/android/Displaying-Images-with-the-Picasso-Library#other-transformations)
+* [x] Apply rounded corners for the poster or background images using [Picasso transformations](https://guides.codepath.com/android/Displaying-Images-with-the-Picasso-Library#other-transformations)
 * [ ] Replaced android-async-http network client with the popular [OkHttp](http://guides.codepath.com/android/Using-OkHttp) networking libraries.
 
 The following **additional** features are implemented:
@@ -44,7 +44,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+- Launcher icon was found from Icons8 [here](https://icons8.com/icon/12147/film-reel).
 
 ## Open-source libraries used
 

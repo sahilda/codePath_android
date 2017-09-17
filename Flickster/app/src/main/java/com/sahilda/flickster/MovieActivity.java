@@ -23,10 +23,13 @@ public class MovieActivity extends AppCompatActivity {
     ArrayList<Movie> movies;
     MovieArrayAdapter movieAdapter;
     ListView lvItems;
+    int orientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        orientation = getResources().getConfiguration().orientation;
+
         setContentView(R.layout.activity_movie);
 
         lvItems = (ListView) findViewById(R.id.lvMovies);
@@ -34,6 +37,10 @@ public class MovieActivity extends AppCompatActivity {
         movieAdapter = new MovieArrayAdapter(this, movies);
         lvItems.setAdapter(movieAdapter);
 
+        getMovies();
+    }
+
+    private void getMovies() {
         String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new JsonHttpResponseHandler() {
@@ -56,6 +63,14 @@ public class MovieActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
+    }
+
+    private void setupPortraitView() {
+
+
+    }
+
+    private void setupLandscapeView() {
 
     }
 

@@ -8,26 +8,24 @@ import java.util.ArrayList;
 
 public class Movie {
 
-    public String getPosterPath() {
-        return String.format("https://image.tmdb.org/t/p/w342/%s", posterPath);
-    }
+    private static String imagePath = "https://image.tmdb.org/t/p/";
 
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    String posterPath;
-    String originalTitle;
-    String overview;
+    private String posterPath;
+    private String backdropPath;
+    private String originalTitle;
+    private String overview;
+    private double voteAverage;
+    private String releaseDate;
+    private boolean adult;
 
     public Movie(JSONObject jsonObject) throws JSONException {
         this.posterPath = jsonObject.getString("poster_path");
+        this.backdropPath = jsonObject.getString("backdrop_path");
         this.originalTitle = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
+        this.voteAverage = jsonObject.getDouble("vote_average");
+        this.releaseDate = jsonObject.getString("release_date");
+        this.adult = jsonObject.getBoolean("adult");
     }
 
     public static ArrayList<Movie> fromJsonArray(JSONArray array) {
@@ -43,4 +41,37 @@ public class Movie {
 
         return results;
     }
+
+    public String getPosterPath() {
+        return String.format("%sw185%s", imagePath, posterPath);
+    }
+
+    public String getBackdropPath() {
+        return String.format("%sw1000%s", imagePath, backdropPath);
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public boolean isPopularFilm() {
+        return (voteAverage > 5.0);
+    }
+
 }
