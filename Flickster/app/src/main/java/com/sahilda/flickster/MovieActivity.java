@@ -20,15 +20,13 @@ import cz.msebera.android.httpclient.Header;
 
 public class MovieActivity extends AppCompatActivity {
 
-    ArrayList<Movie> movies;
-    MovieArrayAdapter movieAdapter;
-    ListView lvItems;
-    int orientation;
+    private ArrayList<Movie> movies;
+    private MovieArrayAdapter movieAdapter;
+    private ListView lvItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        orientation = getResources().getConfiguration().orientation;
 
         setContentView(R.layout.activity_movie);
 
@@ -63,15 +61,6 @@ public class MovieActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
-    }
-
-    private void setupPortraitView() {
-
-
-    }
-
-    private void setupLandscapeView() {
-
     }
 
 }

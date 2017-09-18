@@ -17,6 +17,7 @@ public class Movie {
     private double voteAverage;
     private String releaseDate;
     private boolean adult;
+    public PopularValues popular;
 
     public Movie(JSONObject jsonObject) throws JSONException {
         this.posterPath = jsonObject.getString("poster_path");
@@ -26,6 +27,7 @@ public class Movie {
         this.voteAverage = jsonObject.getDouble("vote_average");
         this.releaseDate = jsonObject.getString("release_date");
         this.adult = jsonObject.getBoolean("adult");
+        this.popular = isPopularFilm() ? PopularValues.POPULAR : PopularValues.NOT_POPULAR;
     }
 
     public static ArrayList<Movie> fromJsonArray(JSONArray array) {
@@ -40,6 +42,10 @@ public class Movie {
         }
 
         return results;
+    }
+
+    public enum PopularValues {
+        POPULAR, NOT_POPULAR;
     }
 
     public String getPosterPath() {
@@ -71,7 +77,7 @@ public class Movie {
     }
 
     public boolean isPopularFilm() {
-        return (voteAverage > 5.0);
+        return (voteAverage > 7.0);
     }
 
 }
