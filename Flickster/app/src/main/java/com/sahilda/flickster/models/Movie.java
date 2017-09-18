@@ -4,9 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Movie {
+public class Movie implements Serializable {
 
     private static String imagePath = "https://image.tmdb.org/t/p/";
 
@@ -17,6 +18,7 @@ public class Movie {
     private double voteAverage;
     private String releaseDate;
     private boolean adult;
+    private double popularity;
     public PopularValues popular;
 
     public Movie(JSONObject jsonObject) throws JSONException {
@@ -27,6 +29,7 @@ public class Movie {
         this.voteAverage = jsonObject.getDouble("vote_average");
         this.releaseDate = jsonObject.getString("release_date");
         this.adult = jsonObject.getBoolean("adult");
+        this.popularity = jsonObject.getDouble("popularity");
         this.popular = isPopularFilm() ? PopularValues.POPULAR : PopularValues.NOT_POPULAR;
     }
 
@@ -74,6 +77,10 @@ public class Movie {
 
     public boolean isAdult() {
         return adult;
+    }
+
+    public double getPopularity() {
+        return popularity;
     }
 
     public boolean isPopularFilm() {

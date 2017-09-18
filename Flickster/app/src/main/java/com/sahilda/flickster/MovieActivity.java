@@ -1,8 +1,11 @@
 package com.sahilda.flickster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -36,6 +39,7 @@ public class MovieActivity extends AppCompatActivity {
         lvItems.setAdapter(movieAdapter);
 
         getMovies();
+        setupClickListener();
     }
 
     private void getMovies() {
@@ -61,6 +65,22 @@ public class MovieActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
+    }
+
+    private void setupClickListener() {
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Movie movie = movies.get(i);
+                launchMovieDetails(movie);
+            }
+        });
+    }
+
+    public void launchMovieDetails(Movie movie) {
+        Intent i = new Intent(MovieActivity.this, MovieDetailsActivity.class);
+        i.putExtra("movie", movie);
+        startActivity(i);
     }
 
 }

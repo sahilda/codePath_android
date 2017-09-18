@@ -1,7 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgeround">
+
+    <ImageView
+        android:id="@+id/ivMovieImage"
+        android:layout_width="350dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMovieImage"
+        android:text="MovieTitle"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textColor="@color/mainTextYellow"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvOverview"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvTitle"
+        android:textColor="@color/smallTextYellow"
+        android:textSize="12sp"
+        android:text="The last Gunslinger, Roland Deschain, has been locked in an eternal battle with Walter O’Dim, also known as the Man in Black, determined to prevent him from toppling the Dark Tower, which holds the universe together. With the fate of the worlds at stake, good and evil will collide in the ultimate battle as only Roland can defend the Tower from the Man in Black." />
+
+    <RatingBar
+        android:id="@+id/rbVoteAverage"
+        style="?android:attr/ratingBarStyleSmall"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:numStars="10"
+        android:rating="6" />
+
+    <TextView
+        android:id="@+id/tvPopularity"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rbVoteAverage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/mainTextYellow"
+        android:textSize="20sp"
+        android:text="Popularity: 500" />
 
 </RelativeLayout>
