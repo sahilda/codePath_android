@@ -25,10 +25,10 @@ import static com.sahilda.flickster.R.id.ivProgress;
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
     private static class ViewHolder {
-        private TextView title;
-        private TextView overview;
-        private ImageView movieImage;
-        private ImageView progress;
+        protected TextView title;
+        protected TextView overview;
+        protected ImageView movieImage;
+        protected ImageView progress;
     }
 
     public MovieArrayAdapter(Context context, List<Movie> movies) {

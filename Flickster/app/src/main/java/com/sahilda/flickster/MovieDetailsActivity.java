@@ -11,33 +11,28 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private Movie movie;
-    private ImageView ivMovieImage;
-    private TextView tvTitle;
-    private TextView tvOverview;
-    private TextView tvPopularity;
-    private RatingBar rbVoteAverage;
-
+    @BindView(R.id.ivMovieImage) protected ImageView ivMovieImage;
+    @BindView(R.id.tvTitle) protected TextView tvTitle;
+    @BindView(R.id.tvOverview) protected TextView tvOverview;
+    @BindView(R.id.tvPopularity) protected TextView tvPopularity;
+    @BindView(R.id.rbVoteAverage) protected RatingBar rbVoteAverage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         movie = (Movie) getIntent().getSerializableExtra("movie");
         setContentView(R.layout.activity_movie_details);
-
-        ivMovieImage = (ImageView) findViewById(R.id.ivMovieImage);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvOverview = (TextView) findViewById(R.id.tvOverview);
-        tvPopularity = (TextView) findViewById(R.id.tvPopularity);
-        rbVoteAverage = (RatingBar) findViewById(R.id.rbVoteAverage);
+        ButterKnife.bind(this);
 
         tvTitle.setText(movie.getOriginalTitle());
         tvOverview.setText(movie.getOverview());
-
         DecimalFormat df = new DecimalFormat("#.00");
         tvPopularity.setText("Popularity: " + df.format(movie.getPopularity()));
         rbVoteAverage.setRating((float) movie.getVoteAverage());
