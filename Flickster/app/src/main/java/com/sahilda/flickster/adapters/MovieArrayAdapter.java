@@ -2,6 +2,7 @@ package com.sahilda.flickster.adapters;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +18,21 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
-
-import static com.sahilda.flickster.R.id.ivMovieImage;
-import static com.sahilda.flickster.R.id.ivProgress;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
-    private static class ViewHolder {
-        protected TextView title;
-        protected TextView overview;
-        protected ImageView movieImage;
-        protected ImageView progress;
+    protected static class ViewHolder {
+        @Nullable @BindView(R.id.tvTitle) protected TextView title;
+        @Nullable @BindView(R.id.tvOverview) protected TextView overview;
+        @BindView(R.id.ivMovieImage) protected ImageView movieImage;
+        @Nullable @BindView(R.id.ivProgress) protected ImageView progress;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     public MovieArrayAdapter(Context context, List<Movie> movies) {
@@ -53,9 +57,8 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         int type = getItemViewType(position);
         // check if the existing view is being reused
         if (convertView == null) {
-            viewHolder = new ViewHolder();
             convertView = getInflatedLayoutForType(type);
-            setupConvertView(type, convertView, viewHolder);
+            viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -75,13 +78,6 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         } else {
             return null;
         }
-    }
-
-    private void setupConvertView(int type, View view, ViewHolder viewHolder) {
-        viewHolder.movieImage = (ImageView) view.findViewById(ivMovieImage);
-        viewHolder.title = (TextView) view.findViewById(R.id.tvTitle);
-        viewHolder.overview = (TextView) view.findViewById(R.id.tvOverview);
-        viewHolder.progress = (ImageView) view.findViewById(ivProgress);
     }
 
     private void setupViewHolder(int type, ViewHolder viewHolder, Movie movie) {

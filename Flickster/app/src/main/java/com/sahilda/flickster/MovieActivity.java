@@ -74,13 +74,23 @@ public class MovieActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Movie movie = movies.get(i);
-                launchMovieDetails(movie);
+                if (movie.isPopularFilm()) {
+                    launchVideo(movie);
+                } else {
+                    launchMovieDetails(movie);
+                }
             }
         });
     }
 
-    public void launchMovieDetails(Movie movie) {
+    private void launchMovieDetails(Movie movie) {
         Intent i = new Intent(MovieActivity.this, MovieDetailsActivity.class);
+        i.putExtra("movie", movie);
+        startActivity(i);
+    }
+
+    private void launchVideo(Movie movie) {
+        Intent i = new Intent(MovieActivity.this, VideoActivity.class);
         i.putExtra("movie", movie);
         startActivity(i);
     }
