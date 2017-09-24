@@ -11,7 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.sahilda.nytimessearch.models.Article;
 
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class ArticleArrayAdapter extends ArrayAdapter<Article> {
     public ArticleArrayAdapter(Context context, List<Article> articles) {
         super(context, android.R.layout.simple_list_item_1, articles);
     }
-
 
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -38,7 +38,7 @@ public class ArticleArrayAdapter extends ArrayAdapter<Article> {
         tvTitle.setText(article.getHeadline());
 
         if (!TextUtils.isEmpty(article.getThumbNail())) {
-            Picasso.with(getContext())
+            Glide.with(getContext())
                     .load(article.getThumbNail())
                     .into(imageView);
         }

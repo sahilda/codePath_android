@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etQuery"
-        android:numColumns="4"
+        android:numColumns="2"
         />
+
 </RelativeLayout>

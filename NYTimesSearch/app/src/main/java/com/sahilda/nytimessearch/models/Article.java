@@ -1,17 +1,22 @@
-package com.sahilda.nytimessearch;
+package com.sahilda.nytimessearch.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Article implements Serializable {
+@Parcel
+public class Article {
 
     private String mWebUrl;
     private String mHeadline;
     private String mThumbNail;
+
+    public Article() {
+
+    }
 
     public Article(JSONObject jsonObject) {
         try {
@@ -52,4 +57,5 @@ public class Article implements Serializable {
     public String getThumbNail() {
         return mThumbNail;
     }
+
 }
