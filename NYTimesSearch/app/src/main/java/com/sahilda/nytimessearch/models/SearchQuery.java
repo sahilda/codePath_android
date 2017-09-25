@@ -8,11 +8,11 @@ import java.util.List;
 @Parcel
 public class SearchQuery {
 
-    private String mBeginDate;
-    private SortType mSortType;
-    private String mQuery;
-    private int mPage;
-    private List<NewsDeskType> mNewsDeskTypes;
+    public String mBeginDate;
+    public SortType mSortType;
+    public String mQuery;
+    public int mPage;
+    public List<NewsDeskType> mNewsDeskTypes;
 
     public SearchQuery() {
         this.mQuery = null;

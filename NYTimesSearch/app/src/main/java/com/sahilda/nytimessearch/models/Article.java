@@ -10,9 +10,9 @@ import java.util.ArrayList;
 @Parcel
 public class Article {
 
-    private String mWebUrl;
-    private String mHeadline;
-    private String mThumbNail;
+    public String mWebUrl;
+    public String mHeadline;
+    public String mThumbNail;
 
     public Article() {
 

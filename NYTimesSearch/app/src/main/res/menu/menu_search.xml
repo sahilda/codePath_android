@@ -2,9 +2,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sahilda.nytimessearch.activities.SearchActivity">
+
+    <item
+        android:id="@+id/action_filters"
+        app:showAsAction="ifRoom"
+        android:title="Filters"
+        android:icon="@drawable/ic_action_filter_white"
+        />
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        />
+
 </menu>

@@ -20,4 +20,5 @@
         android:ellipsize="end"
         android:text="TextView"
         />
+
 </LinearLayout>
