@@ -1,17 +1,21 @@
 package com.sahilda.nytimessearch.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -29,16 +33,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private EditText etQuery;
     private GridView gvResults;
-    private Button btnSearch;
-
     private ArrayList<Article> mArticles;
     private ArticleArrayAdapter mAdapter;
     private SearchQuery mSearchQuery;
@@ -54,9 +56,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setupViewsAndVariables() {
-        etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
-        btnSearch = (Button) findViewById(R.id.btnSearch);
         mArticles = new ArrayList<>();
         mAdapter = new ArticleArrayAdapter(this, mArticles);
         mSearchQuery = new SearchQuery();
@@ -75,7 +75,12 @@ public class SearchActivity extends AppCompatActivity {
         scrollListener = new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                loadNextDataFromApi(page);
+                if (!isOnline()) {
+                    String message = "Cannot load more data. No Internet connection detected.";
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                } else {
+                    loadNextDataFromApi(page);
+                }
                 return true;
             }
         };
@@ -84,8 +89,28 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+                performSearch(query);
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -106,33 +131,42 @@ public class SearchActivity extends AppCompatActivity {
         filtersFragment.show(fm, "fragment_filters");
     }
 
-    public void onArticleSearch(View view) {
-        String query = etQuery.getText().toString();
-        mSearchQuery.setQuery(query);
-        NYTimesAPI.getArticles(mSearchQuery, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray articleJsonResults = null;
-                try {
-                    articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-                    mArticles.clear();
-                    scrollListener.resetState();
-                    mAdapter.addAll(Article.fromJSONArray(articleJsonResults));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+    private void performSearch(String query) {
+        if (!isOnline()) {
+            String message = "No Internet connection detected.";
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        } else {
+            mSearchQuery.setQuery(query);
+            NYTimesAPI.getArticles(mSearchQuery, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    JSONArray articleJsonResults = null;
+                    try {
+                        articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                        mArticles.clear();
+                        scrollListener.resetState();
+                        mAdapter.addAll(Article.fromJSONArray(articleJsonResults));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.e("RESPONSE", errorResponse.toString());
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.e("RESPONSE", errorResponse.toString());
+                    try {
+                        String message = errorResponse.getString("message");
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        // do nothing
+                    }
+                }
+            });
+        }
     }
 
     public void loadNextDataFromApi(int offset) {
         mSearchQuery.setPage(offset);
-        Toast.makeText(this, "" + offset, Toast.LENGTH_SHORT).show();
         NYTimesAPI.getArticles(mSearchQuery, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -149,9 +183,32 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.e("RESPONSE", errorResponse.toString());
+                try {
+                    String message = errorResponse.getString("message");
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    // do nothing
+                }
             }
         });
+    }
 
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+        return false;
     }
 
 }

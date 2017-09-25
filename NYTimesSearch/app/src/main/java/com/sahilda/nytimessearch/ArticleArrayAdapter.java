@@ -40,6 +40,12 @@ public class ArticleArrayAdapter extends ArrayAdapter<Article> {
         if (!TextUtils.isEmpty(article.getThumbNail())) {
             Glide.with(getContext())
                     .load(article.getThumbNail())
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(imageView);
+        } else {
+            Glide.with(getContext())
+                    .load(R.drawable.placeholder)
                     .into(imageView);
         }
 

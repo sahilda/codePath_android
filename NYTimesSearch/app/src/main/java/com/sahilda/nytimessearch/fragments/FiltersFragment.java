@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
@@ -30,6 +32,7 @@ public class FiltersFragment extends DialogFragment implements DatePickerFragmen
     CheckBox cbSports;
     Spinner spOrder;
     TextView tvDate;
+    Button btnSave;
 
     public FiltersFragment() {
 
@@ -53,9 +56,20 @@ public class FiltersFragment extends DialogFragment implements DatePickerFragmen
         super.onViewCreated(view, savedInstanceState);
         mSearchQuery = (SearchQuery) Parcels.unwrap(getArguments().getParcelable("searchQuery"));
 
+        setupSaveButton(view);
         setupDate(view);
         setupCheckboxes(view);
         setupSpinner(view);
+    }
+
+    private void setupSaveButton(View view) {
+        btnSave = (Button) view.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
     }
 
     private void setupDate(View view) {
@@ -78,6 +92,8 @@ public class FiltersFragment extends DialogFragment implements DatePickerFragmen
 
     public void setupSpinner(View view) {
         spOrder = (Spinner) view.findViewById(R.id.spOrder);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_array, R.layout.spinner_item1);
+        spOrder.setAdapter(adapter);
 
         spOrder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

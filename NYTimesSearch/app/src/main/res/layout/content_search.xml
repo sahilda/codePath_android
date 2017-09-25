@@ -8,34 +8,11 @@
     tools:context="com.sahilda.nytimessearch.activities.SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onArticleSearch"
-        />
-
-    <EditText
-        android:padding="8dp"
-        android:id="@+id/etQuery"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:inputType="textPersonName"
-        android:hint="@string/hint"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/btnSearch"
-        android:layout_alignBottom="@+id/btnSearch"
-        />
-
     <GridView
         android:id="@+id/gvResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etQuery"
+        android:paddingTop="5dp"
         android:numColumns="2"
         />
 

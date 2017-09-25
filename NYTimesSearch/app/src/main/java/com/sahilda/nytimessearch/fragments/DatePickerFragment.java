@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 
 import com.sahilda.nytimessearch.R;
@@ -21,6 +22,7 @@ public class DatePickerFragment extends DialogFragment {
     SearchQuery mSearchQuery;
     DatePicker dpBeginDate;
     String date;
+    Button btnSave;
 
     public DatePickerFragment() {
 
@@ -45,6 +47,13 @@ public class DatePickerFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         dpBeginDate = (DatePicker) view.findViewById(R.id.dpBeginDate);
         mSearchQuery = (SearchQuery) Parcels.unwrap(getArguments().getParcelable("searchQuery"));
+        btnSave = (Button) view.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
         String date = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
         if (mSearchQuery.getBeginDate() != null) {
