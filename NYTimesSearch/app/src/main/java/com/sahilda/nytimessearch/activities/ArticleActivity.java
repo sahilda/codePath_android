@@ -28,4 +28,5 @@ public class ArticleActivity extends AppCompatActivity {
         });
         webView.loadUrl(article.getWebUrl());
     }
+
 }

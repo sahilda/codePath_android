@@ -11,18 +11,21 @@
         android:text="Begin Date"
         android:id="@+id/tvBeginDate" />
 
-    <!--<DatePicker
-        android:id="@+id/dpBeginDate"
+    <TextView
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvBeginDate"
-        android:layout_centerHorizontal="true" />
-    -->
+        android:layout_centerHorizontal="true"
+        android:text="03/23/2017"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/tvBeginDate"
+        android:layout_below="@id/tvDate"
         android:text="Sort Order"
         android:id="@+id/tvSortOrder" />
 

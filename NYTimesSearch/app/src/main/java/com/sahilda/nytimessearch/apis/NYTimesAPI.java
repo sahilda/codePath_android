@@ -3,6 +3,7 @@ package com.sahilda.nytimessearch.apis;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.sahilda.nytimessearch.models.NewsDeskType;
 import com.sahilda.nytimessearch.models.SearchQuery;
 
 public class NYTimesAPI {
@@ -19,17 +20,15 @@ public class NYTimesAPI {
         params.put("q", searchQuery.getQuery());
 
         if (searchQuery.getBeginDate() != null) {
-            params.put("begin_date", searchQuery.getBeginDate());
+            String formattedDate = String.valueOf(searchQuery.getBeginDate().split("/")[2]) +
+                    String.valueOf(searchQuery.getBeginDate().split("/")[0]) + String.valueOf(searchQuery.getBeginDate().split("/")[1]);
+            params.put("begin_date", formattedDate);
         }
         if (searchQuery.getNewsDeskType().size() != 0) {
             StringBuilder sb = new StringBuilder("(");
-            for (int i = 0; i < searchQuery.getNewsDeskType().size(); i++ ) {
-                String type = searchQuery.getNewsDeskType().get(i).getType();
-                if (i == 0) {
-                    sb.append("\"" + type + "\"");
-                } else {
-                    sb.append(" \"" + type + "\"");
-                }
+            for (NewsDeskType newsDeskType : searchQuery.getNewsDeskType()) {
+                String type = newsDeskType.getType();
+                sb.append(" \"" + type + "\"");
             }
             sb.append(")");
             params.put("news_desk", sb.toString());

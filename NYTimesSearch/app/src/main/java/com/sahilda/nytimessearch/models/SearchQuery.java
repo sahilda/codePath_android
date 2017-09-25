@@ -2,8 +2,8 @@ package com.sahilda.nytimessearch.models;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Parcel
 public class SearchQuery {
@@ -12,14 +12,14 @@ public class SearchQuery {
     public SortType mSortType;
     public String mQuery;
     public int mPage;
-    public List<NewsDeskType> mNewsDeskTypes;
+    public Set<NewsDeskType> mNewsDeskTypes;
 
     public SearchQuery() {
         this.mQuery = null;
         this.mBeginDate = null;
         this.mSortType = null;
         this.mPage = 0;
-        mNewsDeskTypes = new ArrayList<>();
+        mNewsDeskTypes = new HashSet<>();
     }
 
     public SearchQuery(String query) {
@@ -27,7 +27,7 @@ public class SearchQuery {
         this.mBeginDate = null;
         this.mSortType = null;
         this.mPage = 0;
-        mNewsDeskTypes = new ArrayList<>();
+        mNewsDeskTypes = new HashSet<>();
     }
 
     public String getBeginDate() {
@@ -54,11 +54,11 @@ public class SearchQuery {
         this.mQuery = Query;
     }
 
-    public List<NewsDeskType> getNewsDeskType() {
+    public Set<NewsDeskType> getNewsDeskType() {
         return mNewsDeskTypes;
     }
 
-    public void setNewsDeskType(List<NewsDeskType> newsDeskTypes) {
+    public void setNewsDeskType(Set<NewsDeskType> newsDeskTypes) {
         this.mNewsDeskTypes = newsDeskTypes;
     }
 
