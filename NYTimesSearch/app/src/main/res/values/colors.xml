@@ -4,8 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorSunflowers">#FFCE00</color>
+    <color name="colorSunflower2">#cca500</color>
     <color name="colorStarryNight">#0375B4</color>
     <color name="colorIrises">#4484CE</color>
-    <color name="colorEvening">#262228</color>
+    <color name="colorEvening">#413f41</color>
     <color name="colorWhite">#FFFFFF</color>
 </resources>

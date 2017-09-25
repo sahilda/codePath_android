@@ -8,21 +8,23 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.sahilda.nytimessearch.ArticleArrayAdapter;
-import com.sahilda.nytimessearch.EndlessScrollListener;
 import com.sahilda.nytimessearch.R;
+import com.sahilda.nytimessearch.RecyclerView.ArticleArrayAdapter;
+import com.sahilda.nytimessearch.RecyclerView.EndlessRecyclerViewScrollListener;
+import com.sahilda.nytimessearch.RecyclerView.RecyclerItemClickListener;
+import com.sahilda.nytimessearch.RecyclerView.SpacesItemDecoration;
 import com.sahilda.nytimessearch.apis.NYTimesAPI;
 import com.sahilda.nytimessearch.fragments.FiltersFragment;
 import com.sahilda.nytimessearch.models.Article;
@@ -40,11 +42,11 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private GridView gvResults;
+    private RecyclerView rvResults;
     private ArrayList<Article> mArticles;
     private ArticleArrayAdapter mAdapter;
     private SearchQuery mSearchQuery;
-    private EndlessScrollListener scrollListener;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +58,40 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setupViewsAndVariables() {
-        gvResults = (GridView) findViewById(R.id.gvResults);
+        rvResults = (RecyclerView) findViewById(R.id.rvResults);
         mArticles = new ArrayList<>();
         mAdapter = new ArticleArrayAdapter(this, mArticles);
         mSearchQuery = new SearchQuery();
-        gvResults.setAdapter(mAdapter);
+        rvResults.setAdapter(mAdapter);
+        StaggeredGridLayoutManager gridLayoutManager =
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        rvResults.setLayoutManager(gridLayoutManager);
+        rvResults.addItemDecoration(new SpacesItemDecoration(15));
 
-        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
-                Article article = mArticles.get(position);
-                i.putExtra("article", Parcels.wrap(article));
-                startActivity(i);
-            }
-        });
+        rvResults.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
+                        Article article = mArticles.get(position);
+                        i.putExtra("article", Parcels.wrap(article));
+                        startActivity(i);
+                    }
+                })
+        );
 
-        scrollListener = new EndlessScrollListener() {
+        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (!isOnline()) {
                     String message = "Cannot load more data. No Internet connection detected.";
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 } else {
                     loadNextDataFromApi(page);
                 }
-                return true;
             }
         };
-        gvResults.setOnScrollListener(scrollListener);
+        rvResults.addOnScrollListener(scrollListener);
+
     }
 
     @Override
@@ -137,6 +144,7 @@ public class SearchActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         } else {
             mSearchQuery.setQuery(query);
+            mSearchQuery.setPage(0);
             NYTimesAPI.getArticles(mSearchQuery, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -145,7 +153,8 @@ public class SearchActivity extends AppCompatActivity {
                         articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
                         mArticles.clear();
                         scrollListener.resetState();
-                        mAdapter.addAll(Article.fromJSONArray(articleJsonResults));
+                        mArticles.addAll(Article.fromJSONArray(articleJsonResults));
+                        mAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

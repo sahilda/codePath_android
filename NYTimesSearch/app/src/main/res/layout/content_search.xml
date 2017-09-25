@@ -8,12 +8,11 @@
     tools:context="com.sahilda.nytimessearch.activities.SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <GridView
-        android:id="@+id/gvResults"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:numColumns="2"
+        android:padding="5dp"
         />
 
 </RelativeLayout>
