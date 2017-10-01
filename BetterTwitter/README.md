@@ -2,7 +2,7 @@
 
 Better Twitter is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://developer.twitter.com/en/docs/api-reference-index).
 
-Time spent: **X** hours spent in total
+Time spent: **8** hours spent in total
 
 ## User Stories
 
@@ -14,10 +14,10 @@ The following **required** functionality is completed:
   * [x] User is displayed the [relative timestamp](https://gist.github.com/nesquena/f786232f5ef72f6e10a7) for each tweet "8m", "7h"
   * [x] User can view more tweets as they scroll with [infinite pagination](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView). Number of tweets is unlimited.
     However there are [Twitter Api Rate Limits](https://developer.twitter.com/en/docs/basics/rate-limiting) in place.
-* [ ] User can **compose and post a new tweet**
+* [x] User can **compose and post a new tweet**
   * [x] User can click a “Compose” icon in the Action Bar on the top right
   * [x] User can then enter a new tweet and post this to twitter
-  * [ ] User is taken back to home timeline with **new tweet visible** in timeline
+  * [x] User is taken back to home timeline with **new tweet visible** in timeline
 
 The following **optional** features are implemented:
 
@@ -47,7 +47,7 @@ The following **bonus** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://i.imgur.com/fYxMYjG.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

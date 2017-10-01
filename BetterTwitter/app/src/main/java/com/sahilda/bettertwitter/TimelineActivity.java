@@ -34,6 +34,7 @@ public class TimelineActivity extends AppCompatActivity {
     private RecyclerView rvTweets;
     private EndlessRecyclerViewScrollListener scrollListener;
     private long currentMinId = Long.MAX_VALUE - 1;
+    private final int REQUEST_CODE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,18 @@ public class TimelineActivity extends AppCompatActivity {
     private void composeMessage() {
         Intent i = new Intent(this, ComposeActivity.class);
         i.putExtra("user", currentUser);
-        startActivity(i);
+        startActivityForResult(i, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Tweet tweet = (Tweet) data.getExtras().getSerializable("tweet");
+            int code = data.getExtras().getInt("code", 0);
+            tweets.add(0, tweet);
+            tweetAdapter.notifyDataSetChanged();
+            rvTweets.smoothScrollToPosition(0);
+        }
     }
 
     private void setupRecyclerView() {

@@ -1,5 +1,6 @@
 package com.sahilda.bettertwitter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -90,6 +91,10 @@ public class ComposeActivity extends AppCompatActivity {
                     try {
                         Log.d("TwitterClient", response.toString());
                         tweet = Tweet.fromJson(response);
+                        Intent data = new Intent();
+                        data.putExtra("tweet", tweet);
+                        setResult(RESULT_OK, data);
+                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

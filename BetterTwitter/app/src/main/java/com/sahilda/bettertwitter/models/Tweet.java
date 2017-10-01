@@ -3,7 +3,9 @@ package com.sahilda.bettertwitter.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Tweet {
+import java.io.Serializable;
+
+public class Tweet implements Serializable {
 
     public String body;
     public long id;
