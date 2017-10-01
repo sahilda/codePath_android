@@ -1,4 +1,4 @@
-package com.sahilda.bettertwitter;
+package com.sahilda.bettertwitter.apis;
 
 import android.app.Application;
 import android.content.Context;
