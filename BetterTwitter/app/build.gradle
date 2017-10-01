@@ -10,8 +10,6 @@ android {
         targetSdkVersion 25
     }
 
-    // Related to https://github.com/scribejava/scribejava/issues/480
-    // Scribe expects Java 7 or this custom Apache library
     lintOptions {
         lintConfig rootProject.file('gradle/lint.xml')
     }
@@ -33,9 +31,6 @@ def dbflow_version = "4.0.3"
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    // Glide for remote image loading
-    // Android Async Http for sending async network requests
-    // DBFlow for simple persistence with an ORM
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
