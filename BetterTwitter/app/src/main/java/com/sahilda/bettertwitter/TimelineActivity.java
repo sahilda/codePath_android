@@ -15,6 +15,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.sahilda.bettertwitter.apis.TwitterApplication;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 import com.sahilda.bettertwitter.models.Tweet;
+import com.sahilda.bettertwitter.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private TwitterClient client;
     private TweetAdapter tweetAdapter;
+    private User currentUser;
     private ArrayList<Tweet> tweets;
     private RecyclerView rvTweets;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -40,6 +42,7 @@ public class TimelineActivity extends AppCompatActivity {
         client = TwitterApplication.getRestClient();
         setupToolbar();
         setupRecyclerView();
+        getCurrentUser();
         populateTimeline(currentMinId);
     }
 
@@ -69,6 +72,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void composeMessage() {
         Intent i = new Intent(this, ComposeActivity.class);
+        i.putExtra("user", currentUser);
         startActivity(i);
     }
 
@@ -86,6 +90,27 @@ public class TimelineActivity extends AppCompatActivity {
             }
         };
         rvTweets.addOnScrollListener(scrollListener);
+    }
+
+    private void getCurrentUser() {
+        client.getCurrentUser(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Log.d("TwitterClient", response.toString());
+                    currentUser = User.fromJson(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("TwitterClient", errorResponse.toString());
+                Toast.makeText(getApplicationContext(), "API Error", Toast.LENGTH_SHORT).show();
+                throwable.printStackTrace();
+            }
+        });
     }
 
     private void populateTimeline(long maxId) {
