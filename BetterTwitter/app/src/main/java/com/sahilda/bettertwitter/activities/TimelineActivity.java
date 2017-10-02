@@ -10,10 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.sahilda.bettertwitter.EndlessRecyclerViewScrollListener;
+import com.sahilda.bettertwitter.ItemClickSupport;
 import com.sahilda.bettertwitter.R;
 import com.sahilda.bettertwitter.TweetAdapter;
 import com.sahilda.bettertwitter.apis.TwitterApplication;
@@ -74,6 +76,17 @@ public class TimelineActivity extends AppCompatActivity {
             }
         };
         rvTweets.addOnScrollListener(scrollListener);
+
+        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Intent i = new Intent(getApplicationContext(), TweetDetailActivity.class);
+                        i.putExtra("tweet", tweets.get(position));
+                        startActivity(i);
+                    }
+                }
+        );
     }
 
     private void setupSwipeRefresh() {
