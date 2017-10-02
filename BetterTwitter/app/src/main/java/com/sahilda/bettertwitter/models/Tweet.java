@@ -1,5 +1,11 @@
 package com.sahilda.bettertwitter.models;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.sahilda.bettertwitter.MyDatabase;
 import com.sahilda.bettertwitter.ParseRelativeDate;
 
 import org.json.JSONException;
@@ -7,12 +13,24 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Tweet implements Serializable {
+@Table(database = MyDatabase.class)
+public class Tweet extends BaseModel implements Serializable {
 
-    public String body;
+    @Column
+    @PrimaryKey
     public long id;
+
+    @Column
+    public String body;
+
+    @Column
     public String createdAt;
+
+    @Column
     public String relativeTime;
+
+    @Column
+    @ForeignKey
     public User user;
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {

@@ -14,20 +14,23 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.sahilda.bettertwitter.EndlessRecyclerViewScrollListener;
-import com.sahilda.bettertwitter.ItemClickSupport;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.sahilda.bettertwitter.R;
-import com.sahilda.bettertwitter.TweetAdapter;
-import com.sahilda.bettertwitter.apis.TwitterApplication;
+import com.sahilda.bettertwitter.TwitterApplication;
+import com.sahilda.bettertwitter.adapters.EndlessRecyclerViewScrollListener;
+import com.sahilda.bettertwitter.adapters.ItemClickSupport;
+import com.sahilda.bettertwitter.adapters.TweetAdapter;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 import com.sahilda.bettertwitter.models.Tweet;
 import com.sahilda.bettertwitter.models.User;
+import com.sahilda.bettertwitter.models.User_Table;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -36,7 +39,7 @@ public class TimelineActivity extends AppCompatActivity {
     private TwitterClient client;
     private TweetAdapter tweetAdapter;
     private User currentUser;
-    private ArrayList<Tweet> tweets;
+    private List<Tweet> tweets;
     private RecyclerView rvTweets;
     private EndlessRecyclerViewScrollListener scrollListener;
     private long currentMinId = Long.MAX_VALUE - 1;
@@ -146,6 +149,8 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     Log.d("TwitterClient", response.toString());
                     currentUser = User.fromJson(response);
+                    currentUser.currentUser = true;
+                    currentUser.save();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -153,11 +158,24 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
+                if (errorResponse != null) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                }
+                currentUser = SQLite.select()
+                        .from(User.class)
+                        .where(User_Table.currentUser.is(true))
+                        .querySingle();
                 Toast.makeText(getApplicationContext(), "API Error", Toast.LENGTH_SHORT).show();
                 throwable.printStackTrace();
             }
         });
+    }
+
+    private List<Tweet> getTweetsFromDB() {
+        List<Tweet> tweets = SQLite.select()
+                .from(Tweet.class)
+                .queryList();
+        return tweets;
     }
 
     private void populateTimeline() {
@@ -170,6 +188,8 @@ public class TimelineActivity extends AppCompatActivity {
                     try {
                         tweet = Tweet.fromJson(response.getJSONObject(i));
                         setMinId(tweet);
+                        tweet.user.save();
+                        tweet.save();
                         tweets.add(tweet);
                         tweetAdapter.notifyItemChanged(tweets.size() - 1);
                         swipeContainer.setRefreshing(false);
@@ -181,7 +201,13 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
+                if (errorResponse != null) {
+                    Log.d("TwitterClient", errorResponse.toString());
+                }
+                if (tweets.size() == 0) {
+                    tweets.addAll(getTweetsFromDB());
+                    tweetAdapter.notifyDataSetChanged();
+                }
                 Toast.makeText(getApplicationContext(), "API Error", Toast.LENGTH_SHORT).show();
                 throwable.printStackTrace();
             }

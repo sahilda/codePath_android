@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.sahilda.bettertwitter.R;
-import com.sahilda.bettertwitter.apis.TwitterApplication;
+import com.sahilda.bettertwitter.TwitterApplication;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 import com.sahilda.bettertwitter.models.Tweet;
 import com.sahilda.bettertwitter.models.User;

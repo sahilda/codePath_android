@@ -1,16 +1,34 @@
 package com.sahilda.bettertwitter.models;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.sahilda.bettertwitter.MyDatabase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+@Table(database = MyDatabase.class)
+public class User extends BaseModel implements Serializable {
 
-    public String name;
+    @PrimaryKey
+    @Column
     public long uid;
+
+    @Column
+    public String name;
+
+    @Column
     public String screenName;
+
+    @Column
     public String profileImageUrl;
+
+    @Column
+    public boolean currentUser = false;
 
     public static User fromJson(JSONObject jsonObject) throws JSONException {
         User user = new User();

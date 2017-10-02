@@ -1,7 +1,9 @@
-package com.sahilda.bettertwitter;
+package com.sahilda.bettertwitter.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.sahilda.bettertwitter.R;
 
 public class ItemClickSupport {
 

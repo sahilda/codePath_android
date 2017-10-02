@@ -1,4 +1,4 @@
-package com.sahilda.bettertwitter;
+package com.sahilda.bettertwitter.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sahilda.bettertwitter.R;
 import com.sahilda.bettertwitter.models.Tweet;
 
 import java.util.List;

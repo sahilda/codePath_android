@@ -1,4 +1,4 @@
-package com.sahilda.bettertwitter.apis;
+package com.sahilda.bettertwitter;
 
 import android.app.Application;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Context;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.sahilda.bettertwitter.apis.TwitterClient;
 
 /*
  * This is the Android application itself and is used to configure various settings
