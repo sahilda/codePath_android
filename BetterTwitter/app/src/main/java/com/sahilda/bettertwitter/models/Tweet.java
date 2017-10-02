@@ -1,5 +1,7 @@
 package com.sahilda.bettertwitter.models;
 
+import com.sahilda.bettertwitter.ParseRelativeDate;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

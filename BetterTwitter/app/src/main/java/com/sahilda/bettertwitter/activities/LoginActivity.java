@@ -1,4 +1,4 @@
-package com.sahilda.bettertwitter;
+package com.sahilda.bettertwitter.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.View;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
+import com.sahilda.bettertwitter.R;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {

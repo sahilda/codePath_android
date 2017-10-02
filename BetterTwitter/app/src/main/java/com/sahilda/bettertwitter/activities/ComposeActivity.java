@@ -1,18 +1,22 @@
-package com.sahilda.bettertwitter;
+package com.sahilda.bettertwitter.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.sahilda.bettertwitter.R;
 import com.sahilda.bettertwitter.apis.TwitterApplication;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 import com.sahilda.bettertwitter.models.Tweet;
@@ -48,7 +52,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("Tweet");
         toolbar.setNavigationIcon(R.drawable.ic_back);
         setSupportActionBar(toolbar);
     }
@@ -68,6 +72,23 @@ public class ComposeActivity extends AppCompatActivity {
                 .into(imProfile);
         imCancel.setOnClickListener(hitCancel);
         imSubmit.setOnClickListener(hitSubmit);
+
+        etTweetText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                tvCharacterCount.setText(String.valueOf(getTweetCount()));
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tvCharacterCount.setText(String.valueOf(getTweetCount()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                tvCharacterCount.setText(String.valueOf(getTweetCount()));
+            }
+        });
     }
 
     @Override
@@ -84,28 +105,32 @@ public class ComposeActivity extends AppCompatActivity {
     private View.OnClickListener hitSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String text = etTweetText.getText().toString();
-            client.postTweet(text, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        Log.d("TwitterClient", response.toString());
-                        tweet = Tweet.fromJson(response);
-                        Intent data = new Intent();
-                        data.putExtra("tweet", tweet);
-                        setResult(RESULT_OK, data);
-                        finish();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            if (getTweetCount() < 0) {
+                Toast.makeText(getApplicationContext(), "Tweet must be 140 characters or less.", Toast.LENGTH_SHORT).show();
+            } else {
+                String text = etTweetText.getText().toString();
+                client.postTweet(text, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            Log.d("TwitterClient", response.toString());
+                            tweet = Tweet.fromJson(response);
+                            Intent data = new Intent();
+                            data.putExtra("tweet", tweet);
+                            setResult(RESULT_OK, data);
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("TwitterClient", errorResponse.toString());
-                    throwable.printStackTrace();
-                }
-            });
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.d("TwitterClient", errorResponse.toString());
+                        throwable.printStackTrace();
+                    }
+                });
+            }
         }
     };
 
@@ -115,5 +140,9 @@ public class ComposeActivity extends AppCompatActivity {
             finish();
         }
     };
+
+    private int getTweetCount() {
+        return 140 - etTweetText.getText().length();
+    }
 
 }

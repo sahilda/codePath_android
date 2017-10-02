@@ -1,4 +1,4 @@
-package com.sahilda.bettertwitter.models;
+package com.sahilda.bettertwitter;
 
 import android.text.format.DateUtils;
 

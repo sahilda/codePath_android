@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sahilda.bettertwitter.ComposeActivity">
+    tools:context="com.sahilda.bettertwitter.activities.ComposeActivity">
 
     <include layout="@layout/toolbar"
         android:id="@+id/toolbarLayout" />
@@ -16,7 +16,7 @@
         android:layout_marginLeft="5dp"
         android:layout_below="@+id/toolbarLayout"
         android:paddingTop="12dp"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        app:srcCompat="@drawable/ic_cancel" />
 
     <ImageView
         android:id="@+id/imProfile"
