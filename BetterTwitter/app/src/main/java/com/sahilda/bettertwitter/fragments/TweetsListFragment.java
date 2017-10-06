@@ -1,6 +1,5 @@
 package com.sahilda.bettertwitter.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,9 +15,7 @@ import android.widget.Toast;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.sahilda.bettertwitter.R;
 import com.sahilda.bettertwitter.TwitterApplication;
-import com.sahilda.bettertwitter.activities.TweetDetailActivity;
 import com.sahilda.bettertwitter.adapters.EndlessRecyclerViewScrollListener;
-import com.sahilda.bettertwitter.adapters.ItemClickSupport;
 import com.sahilda.bettertwitter.adapters.TweetAdapter;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 import com.sahilda.bettertwitter.models.Tweet;
@@ -30,7 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TweetsListFragment extends Fragment {
+public abstract class TweetsListFragment extends Fragment implements TweetAdapter.TweetAdapterListener {
 
     protected TwitterClient client;
     protected TweetAdapter tweetAdapter;
@@ -61,11 +58,11 @@ public abstract class TweetsListFragment extends Fragment {
     private void setupRecyclerView() {
         rvTweets = (RecyclerView) view.findViewById(R.id.rvTweet);
         tweets = new ArrayList<>();
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter(tweets, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(tweetAdapter);
-        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+        /*ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -74,7 +71,7 @@ public abstract class TweetsListFragment extends Fragment {
                         startActivity(i);
                     }
                 }
-        );
+        );*/
     }
 
     private void setupSwipeRefresh() {
@@ -140,6 +137,12 @@ public abstract class TweetsListFragment extends Fragment {
         tweetAdapter.notifyDataSetChanged();
         currentMinId = Long.MAX_VALUE - 1;
         scrollListener.resetState();
+    }
+
+    @Override
+    public void onItemSelected(View view, int position) {
+        Tweet tweet = tweets.get(position);
+        Toast.makeText(getContext(), tweet.body, Toast.LENGTH_SHORT).show();
     }
 
 }

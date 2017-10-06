@@ -28,7 +28,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
     }
 
     protected void setupScrollListener() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {

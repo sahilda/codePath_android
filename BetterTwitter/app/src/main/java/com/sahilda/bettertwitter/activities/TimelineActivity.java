@@ -4,37 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.sahilda.bettertwitter.R;
 import com.sahilda.bettertwitter.TwitterApplication;
-import com.sahilda.bettertwitter.adapters.EndlessRecyclerViewScrollListener;
-import com.sahilda.bettertwitter.adapters.ItemClickSupport;
-import com.sahilda.bettertwitter.adapters.TweetAdapter;
 import com.sahilda.bettertwitter.apis.TwitterClient;
-import com.sahilda.bettertwitter.fragments.TweetsListFragment;
 import com.sahilda.bettertwitter.fragments.TweetsPagerAdapter;
 import com.sahilda.bettertwitter.models.Tweet;
 import com.sahilda.bettertwitter.models.User;
 import com.sahilda.bettertwitter.models.User_Table;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 

@@ -12,14 +12,74 @@
     <RelativeLayout
         android:id="@+id/rlUserHeader"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
         android:layout_below="@id/toolbarLayout">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/cvProfile"
+            app:cardCornerRadius="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:elevation="10dp">
+
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_launcher" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/cvProfile"
+            android:text="Sahil"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tvName"
+            android:layout_below="@id/tvName"
+            android:text="Tagline"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+        
     </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/llCounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlUserHeader"
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="10dp">
+        
+        <TextView
+            android:id="@+id/tvFollowers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="5 followers"/>
+    
+        <TextView
+            android:id="@+id/tvFollowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_marginLeft="10dp"
+            android:text="5 Following"/>
+    
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rlUserHeader"/>
+        android:layout_below="@id/llCounts"/>
 
 </RelativeLayout>

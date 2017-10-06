@@ -28,6 +28,15 @@ public class User extends BaseModel implements Serializable {
     public String profileImageUrl;
 
     @Column
+    public String tagline;
+
+    @Column
+    public String followersCount;
+
+    @Column
+    public String followingCount;
+
+    @Column
     public boolean currentUser = false;
 
     public static User fromJson(JSONObject jsonObject) throws JSONException {
@@ -37,6 +46,10 @@ public class User extends BaseModel implements Serializable {
         user.uid = jsonObject.getLong("id");
         user.screenName = "@" + jsonObject.getString("screen_name");
         user.profileImageUrl = jsonObject.getString("profile_image_url");
+
+        user.tagline = jsonObject.getString("description");
+        user.followersCount = jsonObject.getString("followers_count");
+        user.followingCount = jsonObject.getString("friends_count");
 
         return user;
     }
