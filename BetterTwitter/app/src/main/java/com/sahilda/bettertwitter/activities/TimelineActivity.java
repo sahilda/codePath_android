@@ -2,6 +2,8 @@ package com.sahilda.bettertwitter.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +23,8 @@ import com.sahilda.bettertwitter.adapters.EndlessRecyclerViewScrollListener;
 import com.sahilda.bettertwitter.adapters.ItemClickSupport;
 import com.sahilda.bettertwitter.adapters.TweetAdapter;
 import com.sahilda.bettertwitter.apis.TwitterClient;
+import com.sahilda.bettertwitter.fragments.TweetsListFragment;
+import com.sahilda.bettertwitter.fragments.TweetsPagerAdapter;
 import com.sahilda.bettertwitter.models.Tweet;
 import com.sahilda.bettertwitter.models.User;
 import com.sahilda.bettertwitter.models.User_Table;
@@ -36,15 +40,9 @@ import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity {
 
-    private TwitterClient client;
-    private TweetAdapter tweetAdapter;
     private User currentUser;
-    private List<Tweet> tweets;
-    private RecyclerView rvTweets;
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private long currentMinId = Long.MAX_VALUE - 1;
     private final int REQUEST_CODE = 20;
-    private SwipeRefreshLayout swipeContainer;
+    private TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,60 +50,19 @@ public class TimelineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timeline);
         client = TwitterApplication.getRestClient();
         setupToolbar();
-        setupRecyclerView();
-        setupSwipeRefresh();
         getCurrentUser();
-        populateTimeline();
+
+        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
+        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(vpPager);
     }
 
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
+        toolbar.setTitle("Better Twitter");
         toolbar.setLogo(R.drawable.ic_logo);
         setSupportActionBar(toolbar);
-    }
-
-    private void setupRecyclerView() {
-        rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
-        tweets = new ArrayList<>();
-        tweetAdapter = new TweetAdapter(tweets);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvTweets.setLayoutManager(linearLayoutManager);
-        rvTweets.setAdapter(tweetAdapter);
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                populateTimeline();
-            }
-        };
-        rvTweets.addOnScrollListener(scrollListener);
-
-        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent i = new Intent(getApplicationContext(), TweetDetailActivity.class);
-                        i.putExtra("tweet", tweets.get(position));
-                        startActivity(i);
-                    }
-                }
-        );
-    }
-
-    private void setupSwipeRefresh() {
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                resetScrollState();
-                populateTimeline();
-            }
-        });
-
-        swipeContainer.setColorSchemeResources(R.color.colorTwitterLogoBlue,
-                R.color.colorWhite,
-                R.color.colorGrey
-                );
     }
 
     @Override
@@ -119,6 +76,9 @@ public class TimelineActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.miCompose:
                 composeMessage();
+                return true;
+            case R.id.miProfile:
+                openProfileActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -136,10 +96,16 @@ public class TimelineActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             Tweet tweet = (Tweet) data.getExtras().getSerializable("tweet");
             int code = data.getExtras().getInt("code", 0);
-            tweets.add(0, tweet);
+            /*tweets.add(0, tweet);
             tweetAdapter.notifyDataSetChanged();
-            rvTweets.smoothScrollToPosition(0);
+            rvTweets.smoothScrollToPosition(0);*/
         }
+    }
+
+    private void openProfileActivity() {
+        Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("user", currentUser);
+        startActivity(i);
     }
 
     private void getCurrentUser() {
@@ -169,62 +135,6 @@ public class TimelineActivity extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
-    }
-
-    private List<Tweet> getTweetsFromDB() {
-        List<Tweet> tweets = SQLite.select()
-                .from(Tweet.class)
-                .queryList();
-        return tweets;
-    }
-
-    private void populateTimeline() {
-        client.getHomeTimeline(currentMinId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("TwitterClient", response.toString());
-                for (int i = 0; i < response.length(); i++) {
-                    Tweet tweet = null;
-                    try {
-                        tweet = Tweet.fromJson(response.getJSONObject(i));
-                        setMinId(tweet);
-                        tweet.user.save();
-                        tweet.save();
-                        tweets.add(tweet);
-                        tweetAdapter.notifyItemChanged(tweets.size() - 1);
-                        swipeContainer.setRefreshing(false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                if (errorResponse != null) {
-                    Log.d("TwitterClient", errorResponse.toString());
-                }
-                if (tweets.size() == 0) {
-                    tweets.addAll(getTweetsFromDB());
-                    tweetAdapter.notifyDataSetChanged();
-                }
-                Toast.makeText(getApplicationContext(), "API Error", Toast.LENGTH_SHORT).show();
-                throwable.printStackTrace();
-            }
-        });
-    }
-
-    private void setMinId(Tweet tweet) {
-        if (tweet.id < currentMinId) {
-            currentMinId = tweet.id - 1;
-        }
-    }
-
-    private void resetScrollState() {
-        tweets.clear();
-        tweetAdapter.notifyDataSetChanged();
-        currentMinId = Long.MAX_VALUE - 1;
-        scrollListener.resetState();
     }
 
 }
