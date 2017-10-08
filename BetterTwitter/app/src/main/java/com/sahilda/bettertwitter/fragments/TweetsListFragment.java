@@ -19,6 +19,7 @@ import com.sahilda.bettertwitter.adapters.EndlessRecyclerViewScrollListener;
 import com.sahilda.bettertwitter.adapters.TweetAdapter;
 import com.sahilda.bettertwitter.apis.TwitterClient;
 import com.sahilda.bettertwitter.models.Tweet;
+import com.sahilda.bettertwitter.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,14 +30,22 @@ import java.util.List;
 
 public abstract class TweetsListFragment extends Fragment implements TweetAdapter.TweetAdapterListener {
 
+    public interface TweetSelectedListener {
+        void onTweetSelected(Tweet tweet);
+        void onUserImageSelected(User user);
+    }
+
     protected TwitterClient client;
-    protected TweetAdapter tweetAdapter;
-    protected List<Tweet> tweets;
-    protected RecyclerView rvTweets;
+    public TweetAdapter tweetAdapter;
+    public List<Tweet> tweets;
+    public RecyclerView rvTweets;
     protected View view;
+    protected LinearLayoutManager linearLayoutManager;
     protected EndlessRecyclerViewScrollListener scrollListener;
     protected SwipeRefreshLayout swipeContainer;
     protected long currentMinId = Long.MAX_VALUE - 1;
+
+    abstract void populateTimeline();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,9 +58,9 @@ public abstract class TweetsListFragment extends Fragment implements TweetAdapte
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragments_tweets_list, container, false);
         setupRecyclerView();
-        setupScrollListener();
         setupSwipeRefresh();
         setupSwipeRefreshListener();
+        setupScrollListener();
         return view;
     }
 
@@ -59,19 +68,9 @@ public abstract class TweetsListFragment extends Fragment implements TweetAdapte
         rvTweets = (RecyclerView) view.findViewById(R.id.rvTweet);
         tweets = new ArrayList<>();
         tweetAdapter = new TweetAdapter(tweets, this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getContext());
         rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(tweetAdapter);
-        /*ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent i = new Intent(getContext(), TweetDetailActivity.class);
-                        i.putExtra("tweet", tweets.get(position));
-                        startActivity(i);
-                    }
-                }
-        );*/
     }
 
     private void setupSwipeRefresh() {
@@ -83,9 +82,25 @@ public abstract class TweetsListFragment extends Fragment implements TweetAdapte
         );
     }
 
-    abstract void setupSwipeRefreshListener();
+    protected void setupSwipeRefreshListener() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                resetScrollState();
+                populateTimeline();
+            }
+        });
+    }
 
-    abstract void setupScrollListener();
+    protected void setupScrollListener() {
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                populateTimeline();
+            }
+        };
+        rvTweets.addOnScrollListener(scrollListener);
+    }
 
     public long addItems(JSONArray response) {
         Log.d("TwitterClient", response.toString());
@@ -140,9 +155,21 @@ public abstract class TweetsListFragment extends Fragment implements TweetAdapte
     }
 
     @Override
+    public void onProfileImageSelected(View view, int position) {
+        User user = tweets.get(position).user;
+        ((TweetSelectedListener) getActivity()).onUserImageSelected(user);
+    }
+
+    @Override
     public void onItemSelected(View view, int position) {
         Tweet tweet = tweets.get(position);
-        Toast.makeText(getContext(), tweet.body, Toast.LENGTH_SHORT).show();
+        ((TweetSelectedListener) getActivity()).onTweetSelected(tweet);
+    }
+
+    @Override
+    public void onUsernameSelected(String username) {
+        Toast.makeText(getActivity(), "Clicked username: " + username,
+                Toast.LENGTH_SHORT).show();
     }
 
 }

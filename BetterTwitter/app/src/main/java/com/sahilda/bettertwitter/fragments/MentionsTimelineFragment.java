@@ -2,12 +2,8 @@ package com.sahilda.bettertwitter.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.sahilda.bettertwitter.adapters.EndlessRecyclerViewScrollListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,28 +18,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
         populateTimeline();
     }
 
-    protected void setupScrollListener() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                populateTimeline();
-            }
-        };
-        rvTweets.addOnScrollListener(scrollListener);
-    }
-
-    protected void setupSwipeRefreshListener() {
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                resetScrollState();
-                populateTimeline();
-            }
-        });
-    }
-
-    private void populateTimeline() {
+    protected void populateTimeline() {
         client.getMentionsTimeline(currentMinId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
