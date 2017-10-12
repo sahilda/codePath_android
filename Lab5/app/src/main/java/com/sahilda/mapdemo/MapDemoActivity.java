@@ -1,7 +1,9 @@
 package com.sahilda.mapdemo;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.ui.IconGenerator;
+import com.parse.ParsePush;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -46,7 +49,7 @@ import static com.sahilda.mapdemo.MapUtils.createBubble;
 
 @RuntimePermissions
 public class MapDemoActivity extends AppCompatActivity implements GoogleMap.OnMapLongClickListener,
-        GoogleMap.OnMarkerDragListener {
+        GoogleMap.OnMarkerDragListener, MarkerUpdatesReceiver.PushInterface {
 
     private SupportMapFragment mapFragment;
     private GoogleMap map;
@@ -54,6 +57,10 @@ public class MapDemoActivity extends AppCompatActivity implements GoogleMap.OnMa
     Location mCurrentLocation;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
+    public static final String CHANNEL_NAME = "android-2017";
+    final PushUtilTracker pushUtilTracker = new PushUtilTracker();;
+
+    MarkerUpdatesReceiver markerUpdatesReceiver;
 
     private final static String KEY_LOCATION = "location";
 
@@ -90,6 +97,11 @@ public class MapDemoActivity extends AppCompatActivity implements GoogleMap.OnMa
             Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
         }
 
+        ParsePush.subscribeInBackground(CHANNEL_NAME);
+
+        markerUpdatesReceiver = new MarkerUpdatesReceiver(this);
+        IntentFilter intentFilter = new IntentFilter("com.parse.push.intent.RECEIVE");
+        registerReceiver(markerUpdatesReceiver, intentFilter);
     }
 
     protected void loadMap(GoogleMap googleMap) {
@@ -107,8 +119,18 @@ public class MapDemoActivity extends AppCompatActivity implements GoogleMap.OnMa
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // avoid memory leaks
+        if (markerUpdatesReceiver != null) {
+            unregisterReceiver(markerUpdatesReceiver);
+        }
+    }
+
+    @Override
     public void onMapLongClick(LatLng latLng) {
         Toast.makeText(this, "Long Press", Toast.LENGTH_LONG).show();
+        PushTest.sendPushTest();
         showAlertDialogForPoint(latLng);
     }
 
@@ -273,6 +295,11 @@ public class MapDemoActivity extends AppCompatActivity implements GoogleMap.OnMa
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onMarkerUpdate(PushRequest pushRequest) {
+        pushUtilTracker.handleMarkerUpdates(this, pushRequest, map);
+    }
+
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends android.support.v4.app.DialogFragment {
 
@@ -309,7 +336,7 @@ public class MapDemoActivity extends AppCompatActivity implements GoogleMap.OnMa
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-
+        PushUtil.sendPushNotification(marker, CHANNEL_NAME);
     }
 
 }

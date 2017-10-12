@@ -39,7 +39,7 @@ public class MapUtils {
         });
     }
 
-    public static void addMarker(GoogleMap map, LatLng point, String title, String snippet,
+    public static Marker addMarker(GoogleMap map, LatLng point, String title, String snippet,
                                    BitmapDescriptor icon) {
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(point)
@@ -49,8 +49,8 @@ public class MapUtils {
 
         Marker marker = map.addMarker(markerOptions);
         marker.setDraggable(true);
-        dropPinEffect(marker);
-        //return map.addMarker(markerOptions);
+        //dropPinEffect(marker);
+        return map.addMarker(markerOptions);
     }
 
     public static BitmapDescriptor createBubble(Context context, int style, String title) {
