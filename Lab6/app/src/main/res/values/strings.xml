@@ -16,7 +16,7 @@
 
     <string-array name="theme_array">
         <item>Material-Light</item>
-        <item>YOUR-CUSTOM-THEME-NAME</item>
+        <item>Giact-Goldfish</item>
     </string-array>
 
 </resources>

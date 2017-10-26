@@ -13,8 +13,15 @@
         <item name="actionBarStyle">@style/action_bar_wh</item>
     </style>
 
-    <style name="Theme.YOUR_CUSTOM_THEME" parent="Theme.AppCompat.Light">
-        <!-- Define styles for YOUR_CUSTOM_THEME here. -->
+    <style name="Theme.Giact_Goldfish" parent="Theme.AppCompat.Light">
+        <item name="pageBackground">@style/page_background_gg</item>
+        <item name="textSubheader">@style/text_subheader_gg</item>
+        <item name="textLarge">@style/text_large_gg</item>
+        <item name="textRegular">@style/text_regular_gg</item>
+        <item name="whiteBackground">@style/white_background_gg</item>
+        <item name="button">@style/button_gg</item>
+        <item name="spinner">@style/spinner_gg</item>
+        <item name="actionBarStyle">@style/action_bar_gg</item>
     </style>
 
 </resources>
