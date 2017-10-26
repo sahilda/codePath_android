@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 public class ThemeActivity extends AppCompatActivity {
 
     @Override
@@ -13,7 +12,6 @@ public class ThemeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theme);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
